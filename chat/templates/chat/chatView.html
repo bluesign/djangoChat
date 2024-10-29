@@ -1,0 +1,52 @@
+{% csrf_token %}
+
+<div id="messages">
+
+{% if latest_messages %}
+    <ul>
+    {% for message in latest_messages %}
+        <div>
+        <p>
+            {{ message.message_date }}
+            <strong>{{ message.sender }}</strong>
+             : {{ message.message_text }}
+        </p>
+        </div>
+
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No messages</p>
+{% endif %}
+
+</div>
+
+<script lang="js">
+
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    function submitMessage() {
+        var message = document.getElementById("message");
+        var messages = document.getElementById("messages");
+
+        fetch("/submitMessage", {
+            method: "POST",
+            credentials: "same-origin",
+            headers: {
+            'X-CSRFToken': csrftoken,
+            "X-Requested-With": "XMLHttpRequest",
+            },
+            body: JSON.stringify({message: message.value})
+        })
+            .then(response => response.text())
+            .then(data => {
+                message.value = ""
+                console.log(data);
+                console.log(messages)
+                messages.innerHTML=data;
+
+            });
+
+    }
+</script>
+    <input type="text" id="message"/>
+    <button  onclick="submitMessage()">Send</button>

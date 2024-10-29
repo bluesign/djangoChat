@@ -1,0 +1,14 @@
+
+    <ul>
+    {% for message in latest_messages %}
+        <div>
+        <p>
+            {{ message.message_date }}
+            <strong>{{ message.sender }}</strong>
+             : {{ message.message_text }}
+        </p>
+        </div>
+
+    {% endfor %}
+    </ul>
+
